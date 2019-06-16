@@ -108,6 +108,11 @@ public class IndicatorSeekBar extends View {
     private Bitmap mUnselectTickMarksBitmap;//the drawable bitmap for tick
     private Bitmap mSelectTickMarksBitmap;//the drawable bitmap for tick
     private Drawable mTickMarksDrawable;
+
+    private Drawable[] mCustomTickMarksDrawables;
+    private Bitmap[] mCustomUnSelectBitmaps;
+    private Bitmap[] mCustomSelectBitmaps;
+
     private int mShowTickMarksType;
     private boolean mTickMarksEndsHide;//true if want to hide the tickMarks which in both side ends of seek bar
     private boolean mTickMarksSweptHide;//true if want to hide the tickMarks which on thumb left.
@@ -526,6 +531,7 @@ public class IndicatorSeekBar extends View {
                     continue;
                 }
             }
+            // todo: this hides the tick when thumb is selected.
             if (i == getThumbPosOnTick() && mTicksCount > 2 && !mSeekSmoothly) {
                 continue;
             }
@@ -534,7 +540,22 @@ public class IndicatorSeekBar extends View {
             } else {
                 mStockPaint.setColor(getRightSideTickColor());
             }
-            if (mTickMarksDrawable != null) {
+            if(mCustomTickMarksDrawables != null && mCustomTickMarksDrawables.length > i && mCustomTickMarksDrawables[i] != null){
+                if (mCustomSelectBitmaps[i] == null || mCustomUnSelectBitmaps[i] == null) {
+                    initTickMarksBitmap(mCustomTickMarksDrawables[i],i);
+                }
+                if (mCustomSelectBitmaps[i] == null || mCustomUnSelectBitmaps[i] == null) {
+                    //please check your selector drawable's format and correct.
+                    throw new IllegalArgumentException("the format of the selector TickMarks drawable is wrong!");
+                }
+                if (i <= thumbPosFloat) {
+                    canvas.drawBitmap(mCustomSelectBitmaps[i], mTickMarksX[i] - mCustomUnSelectBitmaps[i].getWidth() / 2.0f, mProgressTrack.top - mCustomUnSelectBitmaps[i].getHeight() / 2.0f, mStockPaint);
+                } else {
+                    canvas.drawBitmap(mCustomUnSelectBitmaps[i], mTickMarksX[i] - mCustomUnSelectBitmaps[i].getWidth() / 2.0f, mProgressTrack.top - mCustomUnSelectBitmaps[i].getHeight() / 2.0f, mStockPaint);
+                }
+                continue;
+            } else if (mTickMarksDrawable != null) {
+                // if custom tick mark drawable was not provided, use default tick mark
                 if (mSelectTickMarksBitmap == null || mUnselectTickMarksBitmap == null) {
                     initTickMarksBitmap();
                 }
@@ -1113,6 +1134,50 @@ public class IndicatorSeekBar extends View {
         } else {
             mUnselectTickMarksBitmap = getDrawBitmap(mTickMarksDrawable, false);
             mSelectTickMarksBitmap = mUnselectTickMarksBitmap;
+        }
+    }
+
+    /**
+     * initial the bitmap for the <b>custom</b> thickMarks.
+     * @param drawable The custom tick mark drawable to be drawn
+     * @param tickMarkIndex The location of the custom tick mark on the seek bar
+     */
+    private void initTickMarksBitmap(Drawable drawable, int tickMarkIndex) {
+        if (drawable instanceof StateListDrawable) {
+            StateListDrawable listDrawable = (StateListDrawable) drawable;
+            try {
+                Class<? extends StateListDrawable> aClass = listDrawable.getClass();
+                Method getStateCount = aClass.getMethod("getStateCount");
+                int stateCount = (int) getStateCount.invoke(listDrawable);
+                if (stateCount == 2) {
+                    Method getStateSet = aClass.getMethod("getStateSet", int.class);
+                    Method getStateDrawable = aClass.getMethod("getStateDrawable", int.class);
+                    for (int s = 0; s < stateCount; s++) {
+                        int[] stateSet = (int[]) getStateSet.invoke(listDrawable, s);
+                        if (stateSet.length > 0) {
+                            if (stateSet[0] == android.R.attr.state_selected) {
+                                Drawable stateDrawable = (Drawable) getStateDrawable.invoke(listDrawable, s);
+                                mCustomSelectBitmaps[tickMarkIndex] = getDrawBitmap(stateDrawable, false);
+                            } else {
+                                //please check your selector drawable's format, please see above to correct.
+                                throw new IllegalArgumentException("the state of the selector TickMarks drawable is wrong!");
+                            }
+                        } else {
+                            Drawable stateDrawable = (Drawable) getStateDrawable.invoke(listDrawable, s);
+                            mCustomUnSelectBitmaps[tickMarkIndex] = getDrawBitmap(stateDrawable, false);
+                        }
+                    }
+                } else {
+                    //please check your selector drawable's format, please see above to correct.
+                    throw new IllegalArgumentException("the format of the selector TickMarks drawable is wrong!");
+                }
+            } catch (Exception e) {
+                mCustomUnSelectBitmaps[tickMarkIndex] = getDrawBitmap(drawable, false);
+                mCustomSelectBitmaps[tickMarkIndex] = mCustomUnSelectBitmaps[tickMarkIndex];
+            }
+        } else {
+            mCustomUnSelectBitmaps[tickMarkIndex] = getDrawBitmap(drawable, false);
+            mCustomSelectBitmaps[tickMarkIndex] = mCustomUnSelectBitmaps[tickMarkIndex];
         }
 
     }
@@ -1770,6 +1835,52 @@ public class IndicatorSeekBar extends View {
             initTickMarksBitmap();
         }
         invalidate();
+    }
+
+    /**
+     * Set custom tick marks drawables.
+     *
+     * @param drawables an array the drawables for custom marks, selector drawable is ok.
+     */
+    public void setCustomTickMarkDrawable(Drawable[] drawables) {
+        for (int i=0; i<drawables.length; i++) {
+            setCustomTickMark(drawables[i], i);
+        }
+        invalidate();
+    }
+
+    /**
+     * Set custom tick mark drawable.
+     *
+     * @param drawable a drawables for custom mark, selector drawable is ok.
+     * @param tickMarkIndex location of the custom tickmark that will be drawn from the drawable on the see kbar.
+     */
+    public void setCustomTickMarkDrawable(Drawable drawable, int tickMarkIndex) {
+        setCustomTickMark(drawable, tickMarkIndex);
+        invalidate();
+    }
+
+    private void setCustomTickMark(Drawable drawable, int tickMarkIndex){
+        if(mTickMarksDrawable == null){
+            throw new IllegalArgumentException("the Attribute: isb_tick_marks_drawable must be set before setting custom Tick Marks. Default tickmark was not set.");
+        }
+
+        if(mTicksCount <= 0)
+            throw new IllegalArgumentException("the Argument: TICK COUNT must be set before setting custom tick marks.");
+
+        if(mCustomTickMarksDrawables == null || mCustomSelectBitmaps == null || mCustomUnSelectBitmaps == null){
+            mCustomTickMarksDrawables = new Drawable[mTicksCount];
+            mCustomSelectBitmaps = new Bitmap[mTicksCount];
+            mCustomUnSelectBitmaps = new Bitmap[mTicksCount];
+        }
+
+        if (drawable == null) {
+            this.mCustomTickMarksDrawables[tickMarkIndex] = null;
+            this.mCustomUnSelectBitmaps[tickMarkIndex] = null;
+            this.mCustomSelectBitmaps[tickMarkIndex] = null;
+        } else {
+            this.mCustomTickMarksDrawables[tickMarkIndex] = drawable;
+        }
     }
 
     /**
