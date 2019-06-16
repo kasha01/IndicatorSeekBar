@@ -1832,7 +1832,6 @@ public class IndicatorSeekBar extends View {
             this.mTickMarksDrawable = drawable;
             this.mTickRadius = Math.min(SizeUtils.dp2px(mContext, THUMB_MAX_WIDTH), mTickMarksSize) / 2.0f;
             this.mCustomDrawableMaxHeight = Math.max(mThumbTouchRadius, mTickRadius) * 2.0f;
-            initTickMarksBitmap();
         }
         invalidate();
     }
