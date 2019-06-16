@@ -73,7 +73,8 @@ public class IndicatorSeekBar extends View {
     private boolean mUserSeekable;//true if the user can seek to change the progress,otherwise only can be changed by setProgress().
     private boolean mOnlyThumbDraggable;//only drag the seek bar's thumb can be change the progress
     private boolean mSeekSmoothly;//seek continuously
-    private float[] mProgressArr;//save the progress which at tickMark position.
+	private boolean mShowTickOnThumb;
+	private float[] mProgressArr;//save the progress which at tickMark position.
     private boolean mR2L;//right to left,compat local problem.
     //tick texts
     private boolean mShowTickText;//the palace where the tick text show .
@@ -197,7 +198,8 @@ public class IndicatorSeekBar extends View {
         mClearPadding = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_clear_default_padding, builder.clearPadding);
         mOnlyThumbDraggable = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_only_thumb_draggable, builder.onlyThumbDraggable);
         mSeekSmoothly = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_seek_smoothly, builder.seekSmoothly);
-        mR2L = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_r2l, builder.r2l);
+        mShowTickOnThumb = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_show_tick_on_thumb,builder.showTickOnThumb);
+	    mR2L = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_r2l, builder.r2l);
         //track
         mBackgroundTrackSize = ta.getDimensionPixelSize(R.styleable.IndicatorSeekBar_isb_track_background_size, builder.trackBackgroundSize);
         mProgressTrackSize = ta.getDimensionPixelSize(R.styleable.IndicatorSeekBar_isb_track_progress_size, builder.trackProgressSize);
@@ -531,8 +533,7 @@ public class IndicatorSeekBar extends View {
                     continue;
                 }
             }
-            // todo: this hides the tick when thumb is selected.
-            if (i == getThumbPosOnTick() && mTicksCount > 2 && !mSeekSmoothly) {
+            if (i == getThumbPosOnTick() && mTicksCount > 2 && !mSeekSmoothly && !mShowTickOnThumb) {
                 continue;
             }
             if (i <= thumbPosFloat) {
@@ -1530,6 +1531,7 @@ public class IndicatorSeekBar extends View {
         this.mIsFloatProgress = builder.progressValueFloat;
         this.mTicksCount = builder.tickCount;
         this.mSeekSmoothly = builder.seekSmoothly;
+        this.mShowTickOnThumb = builder.showTickOnThumb;
         this.mR2L = builder.r2l;
         this.mUserSeekable = builder.userSeekable;
         this.mClearPadding = builder.clearPadding;

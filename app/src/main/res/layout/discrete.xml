@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="18dp"
             app:isb_progress="40"
+            app:isb_show_tick_on_thumb="true"
             app:isb_show_tick_texts="true"
             app:isb_tick_texts_array="@array/last_next_length_6"
             app:isb_ticks_count="6" />

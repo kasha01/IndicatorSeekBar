@@ -7,6 +7,7 @@
         <attr name="isb_progress" format="float" /><!-- the current progress value of seekBar, default 0-->
         <attr name="isb_progress_value_float" format="boolean" /><!--set the value of seekBar to float type, default false-->
         <attr name="isb_seek_smoothly" format="boolean" /><!--true to seek smoothly when has ticks, default false-->
+        <attr name="isb_show_tick_on_thumb" format="boolean"/><!--true to show tick mark when thumb is on tick-->
         <attr name="isb_r2l" format="boolean" /><!--compat app local change,like arabic local, default false-->
         <attr name="isb_ticks_count" format="integer" /><!--seekBar's ticks count, default zero-->
         <attr name="isb_user_seekable" format="boolean" /><!--prevent user from seeking,only can be change thumb location by setProgress(), default false-->

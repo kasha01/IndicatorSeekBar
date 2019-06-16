@@ -25,6 +25,7 @@ public class Builder {
     float progress = 0;
     boolean progressValueFloat = false;
     boolean seekSmoothly = false;
+    boolean showTickOnThumb = false;
     boolean r2l = false;
     boolean userSeekable = true;
     boolean onlyThumbDraggable = false;
@@ -138,6 +139,17 @@ public class Builder {
      */
     public Builder seekSmoothly(boolean seekSmoothly) {
         this.seekSmoothly = seekSmoothly;
+        return this;
+    }
+
+    /**
+     * show tick mark if thumb is on tick
+     *
+     * @param showTickOnThumb true show tick mark when thumb is on tick.
+     * @return Builder
+     */
+    public Builder showTickOnThumb(boolean showTickOnThumb) {
+        this.showTickOnThumb = showTickOnThumb;
         return this;
     }
 
