@@ -549,7 +549,7 @@ public class IndicatorSeekBar extends View {
                     //please check your selector drawable's format and correct.
                     throw new IllegalArgumentException("the format of the selector TickMarks drawable is wrong!");
                 }
-                if (i <= thumbPosFloat) {
+                if (i == thumbPosFloat) {
                     canvas.drawBitmap(mCustomSelectBitmaps[i], mTickMarksX[i] - mCustomUnSelectBitmaps[i].getWidth() / 2.0f, mProgressTrack.top - mCustomUnSelectBitmaps[i].getHeight() / 2.0f, mStockPaint);
                 } else {
                     canvas.drawBitmap(mCustomUnSelectBitmaps[i], mTickMarksX[i] - mCustomUnSelectBitmaps[i].getWidth() / 2.0f, mProgressTrack.top - mCustomUnSelectBitmaps[i].getHeight() / 2.0f, mStockPaint);

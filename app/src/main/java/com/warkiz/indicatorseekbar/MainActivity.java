@@ -24,8 +24,7 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
-    //private static String[] sType = new String[]{"continuous", "discrete", "custom", "java", "indicator", "donation"};
-    private static String[] sType = new String[]{"discrete"};
+    private static String[] sType = new String[]{"continuous", "discrete", "custom", "java", "indicator", "donation"};
     private List<Fragment> mFragmentList = new ArrayList<>();
 
     @Override
@@ -41,12 +40,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        //mFragmentList.add(new ContinuousFragment());
+        mFragmentList.add(new ContinuousFragment());
         mFragmentList.add(new DiscreteFragment());
-        //mFragmentList.add(new CustomFragment());
-        //mFragmentList.add(new JavaBuildFragment());
-        //mFragmentList.add(new IndicatorFragment());
-        //mFragmentList.add(new DonationFragment());
+        mFragmentList.add(new CustomFragment());
+        mFragmentList.add(new JavaBuildFragment());
+        mFragmentList.add(new IndicatorFragment());
+        mFragmentList.add(new DonationFragment());
     }
 
     private void initViews() {
