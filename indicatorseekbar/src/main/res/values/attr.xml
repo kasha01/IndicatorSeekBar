@@ -46,6 +46,7 @@
         <attr name="isb_tick_marks_drawable" format="reference" /><!--set custom tick's drawable you want, custom drawable will be limited in 30dp, if less than 30dp ,will show in intrinsic size-->
         <attr name="isb_tick_marks_ends_hide" format="boolean" /><!--hide 2 ticks on the seekBar's both ends, default false-->
         <attr name="isb_tick_marks_swept_hide" format="boolean" /><!--hide the ticks on the seekBar's thumb left, default false-->
+        <attr name="isb_custom_tick_mark_unique" format="boolean" /><!--if true, there will only be one custom tick mark drawn on the seekbar, default false-->
         <attr name="isb_show_tick_marks_type"><!--select the tick shape type, default not show： NONE/0-->
             <enum name="none" value="0" />
             <enum name="oval" value="1" />

@@ -64,6 +64,7 @@ public class Builder {
     int tickMarksColor = Color.parseColor("#FF4081");
     int tickMarksSize = 0;
     Drawable tickMarksDrawable = null;
+    boolean customTickMarkIsUnique = false;
     boolean tickMarksEndsHide = false;
     boolean tickMarksSweptHide = false;
     ColorStateList tickMarksColorStateList = null;
@@ -150,6 +151,18 @@ public class Builder {
      */
     public Builder showTickOnThumb(boolean showTickOnThumb) {
         this.showTickOnThumb = showTickOnThumb;
+        return this;
+    }
+
+    /**
+     * show tick mark if thumb is on tick
+     *
+     * @param customTickMarkIsUnique true custom tick mark will be unique,
+     *                               the previous custom tick will be reset when a new custom tick mark is set.
+     * @return Builder
+     */
+    public Builder customTickMarkIsUnique(boolean customTickMarkIsUnique) {
+        this.customTickMarkIsUnique = customTickMarkIsUnique;
         return this;
     }
 

@@ -115,6 +115,7 @@ public class IndicatorSeekBar extends View {
     private Bitmap[] mCustomSelectBitmaps;
 
     private int mShowTickMarksType;
+    private boolean mCustomTickMarkIsUnique;
     private boolean mTickMarksEndsHide;//true if want to hide the tickMarks which in both side ends of seek bar
     private boolean mTickMarksSweptHide;//true if want to hide the tickMarks which on thumb left.
     private int mTickMarksSize;//the width of tickMark
@@ -222,6 +223,7 @@ public class IndicatorSeekBar extends View {
         mTickMarksDrawable = ta.getDrawable(R.styleable.IndicatorSeekBar_isb_tick_marks_drawable);
         mTickMarksSweptHide = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_tick_marks_swept_hide, builder.tickMarksSweptHide);
         mTickMarksEndsHide = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_tick_marks_ends_hide, builder.tickMarksEndsHide);
+        mCustomTickMarkIsUnique = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_custom_tick_mark_unique, builder.customTickMarkIsUnique);
         //tickTexts
         mShowTickText = ta.getBoolean(R.styleable.IndicatorSeekBar_isb_show_tick_texts, builder.showTickText);
         mTickTextsSize = ta.getDimensionPixelSize(R.styleable.IndicatorSeekBar_isb_tick_texts_size, builder.tickTextsSize);
@@ -1549,6 +1551,7 @@ public class IndicatorSeekBar extends View {
         this.mProgressTrackSize = builder.trackProgressSize;
         this.mProgressTrackColor = builder.trackProgressColor;
         this.mTrackRoundedCorners = builder.trackRoundedCorners;
+        this.mCustomTickMarkIsUnique = builder.customTickMarkIsUnique;
         //thumb
         this.mThumbSize = builder.thumbSize;
         this.mThumbDrawable = builder.thumbDrawable;
@@ -1853,8 +1856,8 @@ public class IndicatorSeekBar extends View {
     /**
      * Set custom tick mark drawable.
      *
-     * @param drawable a drawables for custom mark, selector drawable is ok.
-     * @param tickMarkIndex location of the custom tickmark that will be drawn from the drawable on the see kbar.
+     * @param drawable a drawable for custom mark, selector drawable is ok.
+     * @param tickMarkIndex location of the custom tickmark that will be drawn from the drawable on the seekbar.
      */
     public void setCustomTickMarkDrawable(Drawable drawable, int tickMarkIndex) {
         setCustomTickMark(drawable, tickMarkIndex);
@@ -1869,7 +1872,7 @@ public class IndicatorSeekBar extends View {
         if(mTicksCount <= 0)
             throw new IllegalArgumentException("the Argument: TICK COUNT must be set before setting custom tick marks.");
 
-        if(mCustomTickMarksDrawables == null || mCustomSelectBitmaps == null || mCustomUnSelectBitmaps == null){
+        if(mCustomTickMarkIsUnique || mCustomTickMarksDrawables == null || mCustomSelectBitmaps == null || mCustomUnSelectBitmaps == null){
             mCustomTickMarksDrawables = new Drawable[mTicksCount];
             mCustomSelectBitmaps = new Bitmap[mTicksCount];
             mCustomUnSelectBitmaps = new Bitmap[mTicksCount];
